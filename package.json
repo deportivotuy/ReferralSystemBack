@@ -1,5 +1,5 @@
 {
-    "name": "backend",
+    "name": "ReferralSystem",
     "version": "1.0.0",
     "description": "Descripción de tu proyecto",
     "main": "app.js",
@@ -21,6 +21,6 @@
     "devDependencies": {
         "nodemon": "^2.0.22"
     },
-    "author": "Tu Nombre",
+    "author": "Ronny Simosa",
     "license": "ISC"
 }
