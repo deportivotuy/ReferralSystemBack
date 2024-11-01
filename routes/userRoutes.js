@@ -13,7 +13,7 @@ router.post(
   ],
   userController.registerUser
 );
-
+ 
 router.post(
     '/login',
     [
