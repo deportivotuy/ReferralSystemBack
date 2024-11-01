@@ -27,7 +27,7 @@ exports.registerUser = async (req, res) => {
 
     // Insertar usuario en la base de datos
     const [result] = await connection.query(
-      'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)', 
+      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)', 
       [username, email, hashedPassword]
     );
     res.status(201).json({ id: result.insertId, username, email });
@@ -64,7 +64,7 @@ exports.loginUser = async (req, res) => {
     const user = rows[0];
 
     // Comparar contraseña
-    const validPassword = await bcrypt.compare(password, user.password_hash);
+    const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword) return res.status(401).json({ message: 'Password incorrect' });
 
     // Validar el estatus de la cuenta
