@@ -1,3 +1,4 @@
+const fs = require('fs');
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
 
@@ -12,14 +13,14 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  connectTimeout: 30000, // Ajuste opcional de timeout de conexión (10 segundos)
-  ssl: process.env.DB_CA_CERT ? { ca: process.env.DB_CA_CERT } : null, // Conexión SSL opcional
+  connectTimeout: 30000,
+  ssl: process.env.DB_CA_CERT ? { ca: fs.readFileSync(process.env.DB_CA_CERT) } : null,
 });
 
 // Validar conexión
 pool.getConnection()
   .then(connection => {
-    //console.log('Connection established successfully');
+    console.log('Connection established successfully');
     connection.release(); // Liberar conexión si se obtiene correctamente
   })
   .catch(err => {
