@@ -12,7 +12,7 @@ const pool = mysql.createPool({
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  connectTimeout: 10000, // Ajuste opcional de timeout de conexión (10 segundos)
+  connectTimeout: 30000, // Ajuste opcional de timeout de conexión (10 segundos)
   ssl: process.env.DB_CA_CERT ? { ca: process.env.DB_CA_CERT } : null, // Conexión SSL opcional
 });
 
