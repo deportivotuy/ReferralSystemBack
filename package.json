@@ -26,5 +26,5 @@
     "engines": {
       "node": ">=20.15.1" // Especifica la versión de Node.js
     }
-  }
+}
   
