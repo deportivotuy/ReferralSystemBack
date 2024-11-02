@@ -1,6 +1,6 @@
-const fs = require('fs');
 const mysql = require('mysql2/promise');
 const dotenv = require('dotenv');
+const fs = require('fs');
 
 dotenv.config();
 
@@ -14,7 +14,10 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0,
   connectTimeout: 30000,
-  ssl: process.env.DB_CA_CERT ? { ca: fs.readFileSync(process.env.DB_CA_CERT) } : null,
+  ssl: {
+    ca: fs.readFileSync(process.env.DB_CA_CERT), // Asegúrate de que este archivo exista y sea correcto
+    rejectUnauthorized: false, // Cambia a true en producción
+  },
 });
 
 // Validar conexión
