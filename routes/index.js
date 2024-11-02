@@ -9,4 +9,4 @@ router.use('/users', userRoutes);
 //router.use('/products', productRoutes);
 //router.use('/orders', orderRoutes);
 
-module.exports = router;
+module.exports = router; 
