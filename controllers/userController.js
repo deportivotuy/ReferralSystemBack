@@ -4,22 +4,28 @@ const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const functionGlobal = require('../functionGlobal');
 
-/////
+// Registro de usuario
 exports.registerUser = async (req, res) => {
   console.log('Entro en registerUser');
-  
+
   let connection;
   try {
     const { username, email, password } = req.body;
-    
+
     // Validar resultados de la validación
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array()[0].msg });
     }
-    
+
     // Conectar a la base de datos
     connection = await db.getConnection();
+
+    // Verificar si el nombre de usuario ya existe
+    const [existingUser] = await connection.query('SELECT * FROM users WHERE username = ?', [username]);
+    if (existingUser.length > 0) {
+      return res.status(400).json({ message: 'Username already exists' });
+    }
 
     // Encriptar la contraseña
     const salt = await bcrypt.genSalt(10);
@@ -27,7 +33,7 @@ exports.registerUser = async (req, res) => {
 
     // Insertar usuario en la base de datos
     const [result] = await connection.query(
-      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)', 
+      'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
       [username, email, hashedPassword]
     );
     res.status(201).json({ id: result.insertId, username, email });
@@ -39,9 +45,8 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-/////
+// Inicio de sesión de usuario
 exports.loginUser = async (req, res) => {
-  
   console.log('Entro en loginUser');
 
   let connection;
@@ -51,14 +56,14 @@ exports.loginUser = async (req, res) => {
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array()[0].msg });
     }
-    
+
     const { username, password } = req.body;
-    
+
     // Conectar a la base de datos
     connection = await db.getConnection();
 
     // Verificar si el usuario existe
-    const [rows] = await connection.query('SELECT * FROM users WHERE username = ?',[username]);
+    const [rows] = await connection.query('SELECT * FROM users WHERE username = ?', [username]);
     if (rows.length === 0) return res.status(404).json({ message: 'User not found' });
 
     const user = rows[0];
